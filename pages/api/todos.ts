@@ -13,6 +13,11 @@ export interface ExSession extends Record<string, unknown> {
   expires?: string;
 }
 
+type Data = {
+  title: string;
+  body: string;
+};
+
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const session = (await getSession({ req })) as ExSession;
 
@@ -33,5 +38,21 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     return res.status(200).json(todos);
+  }
+
+  if (req.method === "POST") {
+    const { title, body } = JSON.parse(req.body) as Data;
+
+    await prisma.todo.create({
+      data: {
+        title,
+        body,
+        User: {
+          connect: {
+            id: userId,
+          },
+        },
+      },
+    });
   }
 };
