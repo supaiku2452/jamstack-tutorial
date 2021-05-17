@@ -22,6 +22,12 @@ const options = {
     }),
   ],
   adapter: Adapters.Prisma.Adapter({ prisma }),
+  callbacks: {
+    async session(session, user) {
+      session.user.id = user.id;
+      return session;
+    },
+  },
 };
 
 export default (req, res) => NextAuth(req, res, options);

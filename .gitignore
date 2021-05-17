@@ -38,3 +38,5 @@ pgdata
 
 # prisma
 .env
+
+.idea
